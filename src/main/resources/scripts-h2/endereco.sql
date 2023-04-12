@@ -1,0 +1,2 @@
+merge into att_endereco(id, logradouro, numero, cep, cidade, pessoa_id, endereco_principal, created_at, updated_at)
+    values (100, 'rua Natal', '1983', '60606060', 'Fortaleza', 100, true, '2023-02-28', '2023-02-28');
