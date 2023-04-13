@@ -53,12 +53,12 @@ public class PessoaService {
      * @return {@link Pessoa} salva
      */
     public Pessoa update(Long id, PessoaUpdateDTO body) {
-        getByID(id);
+        var pessoa = getByID(id);
 
         if (body.dataNascimento().isAfter(LocalDate.now()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data de nascimento inválida");
 
-        var pessoa = PessoaMapper.INSTANCE.pessoaSaveDTOToPessoa(body);
+        PessoaMapper.INSTANCE.update(body, pessoa);
         return pessoaRepository.save(pessoa);
     }
 
@@ -69,6 +69,15 @@ public class PessoaService {
      */
     public Page<Pessoa> getAll(Pageable pageable) {
         return pessoaRepository.findAll(pageable);
+    }
+
+    /***
+     * Remove registro do banco
+     * @param id da Pessoa a ser removido
+     */
+    public void delete(Long id) {
+        var pessoa = getByID(id);
+        pessoaRepository.delete(pessoa);
     }
 
 

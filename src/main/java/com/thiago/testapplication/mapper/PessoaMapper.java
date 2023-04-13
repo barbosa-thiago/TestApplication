@@ -20,7 +20,7 @@ public interface PessoaMapper {
 
     Pessoa pessoaSaveDTOToPessoa(PessoaSaveDTO pessoaSaveDTO);
 
-    Pessoa pessoaSaveDTOToPessoa(PessoaUpdateDTO pessoaSaveDTO);
+    void update(PessoaUpdateDTO pessoaSaveDTO, @MappingTarget Pessoa pessoa);
 
     PessoaDTO pessoaToPessoaDTO(Pessoa pessoa);
 

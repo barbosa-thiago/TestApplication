@@ -44,6 +44,13 @@ public class PessoaController {
         return ResponseEntity.ok(mapper.pessoaToPessoaDTO(pessoa));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        pessoaService.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
     @GetMapping()
     public ResponseEntity<Page<PessoaDTO>> getAll(@ParameterObject Pageable pageable) {

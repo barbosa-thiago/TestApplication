@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record PessoaDTO(
-    Long id, String nome, LocalDate dataNascimento, List<EnderecoDTO> enderecos
+    Long id,
+    String nome,
+    LocalDate dataNascimento,
+    List<EnderecoDTO> enderecos
     ) {
 }
