@@ -1,13 +1,13 @@
 package com.thiago.testapplication.common;
 
 import com.thiago.testapplication.dto.endereco.EnderecoSaveDTO;
+import com.thiago.testapplication.dto.endereco.EnderecoUpdateDTO;
 import com.thiago.testapplication.dto.pessoa.PessoaSaveDTO;
 import com.thiago.testapplication.dto.pessoa.PessoaUpdateDTO;
 import com.thiago.testapplication.model.Endereco;
 import com.thiago.testapplication.model.Pessoa;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 public class PessoaFakeFactory {
@@ -68,5 +68,13 @@ public class PessoaFakeFactory {
             "Fortaleza",
             true,
             100L);
+    }
+
+    public static EnderecoUpdateDTO createEnderecoUpdateDTO() {
+        return new EnderecoUpdateDTO("rua Tomas Lopes",
+            "60060160",
+            "200",
+            "Nova cidade",
+            true);
     }
 }

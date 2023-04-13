@@ -1,7 +1,8 @@
 package com.thiago.testapplication.integration;
 
 import com.thiago.testapplication.common.PessoaFakeFactory;
-import com.thiago.testapplication.dto.endereco.EnderecoDTO;
+import com.thiago.testapplication.dto.endereco.EnderecoFullDTO;
+import com.thiago.testapplication.dto.pessoa.PessoaDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -35,7 +36,7 @@ class EnderecoControllerTest {
         var enderecoDTOResponseEntity = restTemplate.exchange("/enderecos",
             HttpMethod.POST,
             new HttpEntity<>(enderecoSaveDTO),
-            EnderecoDTO.class);
+            EnderecoFullDTO.class);
 
         Assertions.assertThat(enderecoDTOResponseEntity.getBody()).hasNoNullFieldsOrProperties();
     }
@@ -48,7 +49,7 @@ class EnderecoControllerTest {
         var enderecoDTOResponseEntity = restTemplate.exchange("/enderecos",
             HttpMethod.POST,
             new HttpEntity<>(enderecoSaveDTO),
-            EnderecoDTO.class);
+            EnderecoFullDTO.class);
 
         Assertions.assertThat(enderecoDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -60,12 +61,44 @@ class EnderecoControllerTest {
         var enderecoDTOResponseEntity = restTemplate.exchange("/enderecos/{pessoaId}",
             HttpMethod.GET,
             null,
-            new ParameterizedTypeReference<List<EnderecoDTO>>() {
+            new ParameterizedTypeReference<List<EnderecoFullDTO>>() {
             },100L);
 
         Assertions.assertThat(enderecoDTOResponseEntity.getBody()).isNotEmpty();
         Assertions.assertThat(enderecoDTOResponseEntity.getBody().get(0)).hasNoNullFieldsOrProperties();
 
+    }
+
+    @Test
+    @Sql({"/scripts-h2/pessoa.sql", "/scripts-h2/endereco.sql"})
+    void update_ReplacesEndereco_WhenSuccessful() {
+        var enderecoUpdateDTO = PessoaFakeFactory.createEnderecoUpdateDTO();
+
+
+        var endereco = restTemplate.exchange("/enderecos/{id}",
+            HttpMethod.PUT,
+            new HttpEntity<>(enderecoUpdateDTO),
+            EnderecoFullDTO.class,
+            100);
+
+        Assertions.assertThat(endereco.getBody()).hasNoNullFieldsOrProperties();
+        Assertions.assertThat(endereco.getBody().cidade()).isEqualTo("Nova cidade");
+
+    }
+
+
+    @Test
+    @Sql({"/scripts-h2/pessoa.sql", "/scripts-h2/endereco.sql"})
+    void delete_RemovesEndereco_WhenSuccessful() {
+
+
+        var pessoaDTO = restTemplate.exchange("/enderecos/{id}",
+            HttpMethod.DELETE,
+            null,
+            Void.class,
+            100);
+
+        Assertions.assertThat(pessoaDTO.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }

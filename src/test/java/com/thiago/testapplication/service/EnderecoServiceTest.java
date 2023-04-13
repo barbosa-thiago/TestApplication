@@ -23,6 +23,8 @@ class EnderecoServiceTest {
 
     @Mock
     EnderecoRepository enderecoRepository;
+    @Mock
+    PessoaService pessoaService;
 
     @BeforeEach
     void setup() {

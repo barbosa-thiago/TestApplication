@@ -13,6 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -82,5 +83,18 @@ class PessoaControllerTest {
         Assertions.assertThat(pessoaDTO.getBody().getContent()).isNotEmpty();
         Assertions.assertThat(pessoaDTO.getBody().getContent().get(0)).hasNoNullFieldsOrProperties();
 
+    }
+
+    @Test
+    @Sql("/scripts-h2/pessoa.sql")
+    void delete_RemovesPessoa_WhenSuccessful() {
+
+        var pessoaDTO = restTemplate.exchange("/pessoas/{id}",
+            HttpMethod.DELETE,
+            null,
+            Void.class,
+            100);
+
+        Assertions.assertThat(pessoaDTO.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }
