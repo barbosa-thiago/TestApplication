@@ -3,7 +3,7 @@ package com.thiago.testapplication.dto.endereco;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record EnderecoSaveDTO(
+public record EnderecoUpdateDTO(
     @NotEmpty(message = "Logradouro não pode ser nulo")
     String logradouro,
     @NotEmpty(message = "CEP não pode ser nulo")
@@ -13,8 +13,6 @@ public record EnderecoSaveDTO(
     @NotEmpty(message = "Cidade não pode ser nulo")
     String cidade,
     @NotNull(message = "Endereço Princial não pode ser nulo")
-    Boolean enderecoPrincipal,
-    @NotNull(message = "PessoaId não pode ser nulo")
-    Long pessoaId
+    Boolean enderecoPrincipal
 ) {
 }

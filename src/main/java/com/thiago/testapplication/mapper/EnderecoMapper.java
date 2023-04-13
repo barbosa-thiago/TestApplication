@@ -1,13 +1,13 @@
 package com.thiago.testapplication.mapper;
 
-import com.thiago.testapplication.dto.endereco.EnderecoDTO;
+import com.thiago.testapplication.dto.endereco.EnderecoFullDTO;
 import com.thiago.testapplication.dto.endereco.EnderecoSaveDTO;
+import com.thiago.testapplication.dto.endereco.EnderecoUpdateDTO;
 import com.thiago.testapplication.model.Endereco;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -17,11 +17,13 @@ public interface EnderecoMapper {
     EnderecoMapper INSTANCE = Mappers.getMapper(EnderecoMapper.class);
 
     @Mapping(target = "pessoaId", source = "pessoa.id")
-    EnderecoDTO enderecoDTOToEndereco(Endereco endereco);
+    EnderecoFullDTO enderecoDTOToEndereco(Endereco endereco);
 
-    @Mapping(target = "pessoa.id", source = "pessoaId")
+    @Mapping(target = ".", source = "pessoaId", ignore = true)
     Endereco enderecoDTOToEndereco(EnderecoSaveDTO enderecoSaveDTO);
 
-    @IterableMapping(elementTargetType = EnderecoDTO.class)
-    List<EnderecoDTO> enderecosDTOToEnderecos(List<Endereco> enderecos);
+    void update(EnderecoUpdateDTO body, @MappingTarget Endereco endereco);
+
+    @IterableMapping(elementTargetType = EnderecoFullDTO.class)
+    List<EnderecoFullDTO> enderecosDTOToEnderecos(List<Endereco> enderecos);
 }

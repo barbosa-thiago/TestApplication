@@ -1,6 +1,7 @@
 package com.thiago.testapplication.service;
 
 import com.thiago.testapplication.dto.endereco.EnderecoSaveDTO;
+import com.thiago.testapplication.dto.endereco.EnderecoUpdateDTO;
 import com.thiago.testapplication.mapper.EnderecoMapper;
 import com.thiago.testapplication.model.Endereco;
 import com.thiago.testapplication.repository.EnderecoRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
+    private final PessoaService pessoaService;
 
     /***
      * Registro de Endereços, necessita o ID de uma Pessoa salva previamente
@@ -25,7 +27,7 @@ public class EnderecoService {
      * @return Endereço salvo
      */
     public Endereco save(EnderecoSaveDTO body) {
-
+        var pessoa = pessoaService.getByID(body.pessoaId());
 
         if (body.enderecoPrincipal()) {
             getByPessoaId(body.pessoaId())
@@ -35,6 +37,7 @@ public class EnderecoService {
                 });
         }
         var endereco = EnderecoMapper.INSTANCE.enderecoDTOToEndereco(body);
+        endereco.setPessoa(pessoa);
 
         return enderecoRepository.save(endereco);
     }
@@ -44,18 +47,18 @@ public class EnderecoService {
      * @param body dados a serem registrados
      * @return {@link Endereco} salva
      */
-    public Endereco update(Long id, EnderecoSaveDTO body) {
-        getByID(id);
+    public Endereco update(Long id, EnderecoUpdateDTO body) {
+        var endereco = getByID(id);
 
         if (body.enderecoPrincipal())
-            getByPessoaId(body.pessoaId())
-                .forEach(endereco -> {
-                    endereco.setEnderecoPrincipal(false);
-                    enderecoRepository.save(endereco);
+            getByPessoaId(endereco.getPessoa().getId())
+                .forEach(end -> {
+                    end.setEnderecoPrincipal(false);
+                    enderecoRepository.save(end);
                 });
 
-        var pessoa = EnderecoMapper.INSTANCE.enderecoDTOToEndereco(body);
-        return enderecoRepository.save(pessoa);
+        EnderecoMapper.INSTANCE.update(body, endereco);
+        return enderecoRepository.save(endereco);
     }
 
     /***
@@ -75,5 +78,14 @@ public class EnderecoService {
      */
     public List<Endereco> getByPessoaId(Long id) {
         return enderecoRepository.findByPessoaId(id);
+    }
+
+    /***
+     * Remove registro do banco
+     * @param id do Endereco a ser removido
+     */
+    public void delete(Long id) {
+        var endereco = getByID(id);
+        enderecoRepository.delete(endereco);
     }
 }
